@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>廉洁文化地图 · 全国高校廉洁文化点位</title>
+<link rel="stylesheet" href="leaflet/leaflet.css">
+<style>
+  :root {
+    --bg: #f5f6f8;
+    --surface: #ffffff;
+    --border: #e7e9ec;
+    --text: #22262b;
+    --text-2: #6b7280;
+    --text-3: #9aa1ab;
+    --accent: #c0392b;
+    --accent-soft: #fbeceb;
+    --radius: 10px;
+    --shadow: 0 1px 3px rgba(16, 24, 40, .06), 0 1px 2px rgba(16, 24, 40, .04);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  body { display: flex; flex-direction: column; overflow: hidden; }
+
+  a { color: var(--accent); text-decoration: none; }
+
+  /* ---------- Top bar ---------- */
+  .topbar {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 20px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .brand h1 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: .5px; }
+  .brand p { margin: 2px 0 0; font-size: 12px; color: var(--text-2); }
+
+  .stats { display: flex; gap: 28px; }
+  .stat { text-align: center; min-width: 56px; }
+  .stat .num { display: block; font-size: 22px; font-weight: 700; color: var(--accent); line-height: 1; }
+  .stat .label { font-size: 12px; color: var(--text-2); }
+
+  /* ---------- Toolbar ---------- */
+  .toolbar {
+    flex: 0 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    padding: 6px 14px;
+    font-size: 13px;
+    color: var(--text-2);
+    background: #f0f1f3;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    cursor: pointer;
+    user-select: none;
+    transition: all .15s ease;
+    white-space: nowrap;
+  }
+  .chip:hover { color: var(--text); background: #e9eaec; }
+  .chip.active { color: #fff; background: var(--accent); }
+  .chip .c { color: inherit; opacity: .75; margin-left: 3px; font-size: 12px; }
+
+  .search { margin-left: auto; }
+  .search input {
+    width: 220px;
+    padding: 7px 12px 7px 32px;
+    font-size: 13px;
+    color: var(--text);
+    background: #f0f1f3 url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%239aa1ab' stroke-width='2.4' stroke-linecap='round'><circle cx='11' cy='11' r='7'/><path d='M21 21l-4.3-4.3'/></svg>") 12px center no-repeat;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    outline: none;
+    transition: all .15s ease;
+  }
+  .search input:focus { background-color: #fff; border-color: var(--accent); }
+
+  /* ---------- Layout ---------- */
+  .layout {
+    flex: 1 1 auto;
+    display: flex;
+    min-height: 0;
+  }
+  .map-wrap { position: relative; flex: 1 1 auto; min-width: 0; }
+  #map { position: absolute; inset: 0; background: #e9ebee; }
+
+  .legend {
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    z-index: 500;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, .94);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    font-size: 12px;
+    color: var(--text-2);
+  }
+  .legend .lg { display: inline-flex; align-items: center; gap: 5px; }
+  .legend .dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  .map-hint {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 500;
+    padding: 5px 12px;
+    font-size: 12px;
+    color: var(--text-2);
+    background: rgba(255, 255, 255, .9);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    pointer-events: none;
+  }
+
+  .layer-toggle {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 500;
+    display: flex;
+    background: rgba(255, 255, 255, .94);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .layer-toggle button {
+    padding: 5px 11px;
+    font-size: 12px;
+    color: var(--text-2);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+  }
+  .layer-toggle button + button { border-left: 1px solid var(--border); }
+  .layer-toggle button.on { color: #fff; background: var(--accent); }
+
+  /* ---------- Side panel ---------- */
+  .side {
+    width: 360px;
+    flex: 0 0 360px;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+  }
+  .side-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .side-head .back {
+    cursor: pointer;
+    color: var(--accent);
+    font-weight: 500;
+    font-size: 13px;
+    display: none;
+  }
+  .side-count {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-3);
+  }
+
+  .list { flex: 1 1 auto; overflow-y: auto; }
+  .list-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 11px 16px;
+    border-bottom: 1px solid #f0f1f3;
+    cursor: pointer;
+    transition: background .12s ease;
+  }
+  .list-item:hover { background: #fafafa; }
+  .list-item.active { background: var(--accent-soft); }
+  .list-item .idx { flex: 0 0 22px; color: var(--text-3); font-size: 12px; padding-top: 2px; }
+  .list-item .body { flex: 1 1 auto; min-width: 0; }
+  .list-item .t { font-size: 13.5px; line-height: 1.4; color: var(--text); }
+  .list-item .s { font-size: 12px; color: var(--text-2); margin-top: 3px; }
+  .list-item .dot { flex: 0 0 auto; width: 8px; height: 8px; border-radius: 50%; margin-top: 6px; }
+
+  .empty { padding: 40px 16px; text-align: center; color: var(--text-3); font-size: 13px; }
+
+  /* ---------- Detail ---------- */
+  .detail { flex: 1 1 auto; overflow-y: auto; padding: 16px; }
+  .detail .cat-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    font-size: 12px;
+    color: #fff;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .detail h2 { margin: 0 0 6px; font-size: 18px; font-weight: 600; line-height: 1.35; }
+  .detail .school { font-size: 13px; color: var(--text-2); margin-bottom: 4px; }
+  .detail .addr { font-size: 12.5px; color: var(--text-3); margin-bottom: 14px; }
+  .detail .summary { font-size: 13.5px; line-height: 1.75; color: #3a3f46; }
+  .detail .more {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 8px 18px;
+    font-size: 13px;
+    color: #fff;
+    background: var(--accent);
+    border-radius: 8px;
+    transition: opacity .15s ease;
+  }
+  .detail .more:hover { opacity: .9; }
+
+  .hidden { display: none !important; }
+
+  /* ---------- Leaflet overrides ---------- */
+  .leaflet-container { font-family: inherit; }
+  .leaflet-control-attribution { font-size: 10px; background: rgba(255,255,255,.7) !important; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 860px) {
+    body { overflow: auto; }
+    .topbar { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .stats { gap: 20px; }
+    .search input { width: 160px; }
+    .layout { flex: none; flex-direction: column; }
+    .map-wrap { height: 52vh; flex: none; }
+    .side { width: 100%; flex: none; height: 48vh; border-left: none; border-top: 1px solid var(--border); }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <h1>廉洁文化地图</h1>
+    <p>全国高校廉洁文化点位 · 数据来源：全国高校思想政治工作网</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><span class="num" id="statPoints">—</span><span class="label">廉洁文化点位</span></div>
+    <div class="stat"><span class="num" id="statSchools">—</span><span class="label">入选高校</span></div>
+    <div class="stat"><span class="num">6</span><span class="label">点位类别</span></div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="chips" id="chips"></div>
+  <div class="search">
+    <input id="search" type="text" placeholder="搜索高校或点位名称" autocomplete="off">
+  </div>
+</div>
+
+<main class="layout">
+  <section class="map-wrap">
+    <div id="map"></div>
+    <div class="map-hint">点击标记查看详情</div>
+    <div class="layer-toggle" id="layerToggle">
+      <button class="on" data-layer="light">浅色</button>
+      <button data-layer="std">标准</button>
+    </div>
+    <div class="legend" id="legend"></div>
+  </section>
+
+  <aside class="side">
+    <div class="side-head">
+      <span class="back" id="backBtn">← 返回列表</span>
+      <span id="sideTitle">点位列表</span>
+      <span class="side-count" id="sideCount"></span>
+    </div>
+    <div id="list" class="list"></div>
+    <div id="detail" class="detail hidden"></div>
+  </aside>
+</main>
+
+<script src="config.js"></script>
+<script src="data.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var DATA = window.MAP_DATA || { points: [], meta: { categories: [] } };
+  var CONFIG = window.MAP_CONFIG || { amap: {}, map: {} };
+  var points = DATA.points || [];
+  var meta = DATA.meta || {};
+
+  var CATEGORY_COLORS = {
+    "历史遗迹": "#b0816b",
+    "纪念场馆": "#6b7db3",
+    "教育基地": "#3d9a72",
+    "艺术作品": "#d08a3a",
+    "文化品牌": "#8b6bb0",
+    "学科课程": "#5da14e"
+  };
+  var FALLBACK_COLOR = "#9aa1ab";
+
+  function colorOf(p) { return CATEGORY_COLORS[p.category] || FALLBACK_COLOR; }
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function filteredPoints() {
+    var kw = state.keyword.trim().toLowerCase();
+    return points.filter(function (p) {
+      if (state.categoryId && p.categoryId !== state.categoryId) return false;
+      if (!kw) return true;
+      return (p.title + " " + p.schoolName + " " + p.address).toLowerCase().indexOf(kw) !== -1;
+    });
+  }
+
+  function renderChips() {
+    var html = (meta.categories || []).map(function (c) {
+      var active = state.categoryId === c.id ? " active" : "";
+      var label = c.name + '<span class="c">' + c.count + "</span>";
+      return '<div class="chip' + active + '" data-id="' + esc(c.id) + '">' + label + "</div>";
+    }).join("");
+    document.getElementById("chips").innerHTML = html;
+  }
+
+  function renderLegend() {
+    var html = Object.keys(CATEGORY_COLORS).map(function (name) {
+      return '<span class="lg"><span class="dot" style="background:' + CATEGORY_COLORS[name] + '"></span>' + name + "</span>";
+    }).join("");
+    document.getElementById("legend").innerHTML = html;
+  }
+
+  function renderList() {
+    var list = filteredPoints();
+    var el = document.getElementById("list");
+    document.getElementById("sideCount").textContent = list.length + " 个";
+    if (!list.length) {
+      el.innerHTML = '<div class="empty">未找到匹配的点位</div>';
+      return;
+    }
+    el.innerHTML = list.map(function (p, i) {
+      var active = state.selectedId === p.id ? " active" : "";
+      return (
+        '<div class="list-item' + active + '" data-id="' + esc(p.id) + '">' +
+          '<span class="idx">' + (i + 1) + "</span>" +
+          '<span class="dot" style="background:' + colorOf(p) + '"></span>' +
+          '<div class="body"><div class="t">' + esc(p.title) + "</div>" +
+          '<div class="s">' + esc(p.schoolName) + "</div></div>" +
+        "</div>"
+      );
+    }).join("");
+  }
+
+  function renderDetail(p) {
+    document.getElementById("list").classList.add("hidden");
+    document.getElementById("detail").classList.remove("hidden");
+    document.getElementById("sideTitle").textContent = "点位详情";
+    document.getElementById("backBtn").style.display = "inline";
+    document.getElementById("sideCount").textContent = "";
+    document.getElementById("detail").innerHTML =
+      '<span class="cat-badge" style="background:' + colorOf(p) + '">' + esc(p.category) + "</span>" +
+      "<h2>" + esc(p.title) + "</h2>" +
+      '<div class="school">' + esc(p.schoolName) + "</div>" +
+      '<div class="addr">' + esc(p.address) + "</div>" +
+      '<div class="summary">' + esc(p.summary || "暂无简介") + "</div>" +
+      (p.link ? '<a class="more" href="' + esc(p.link) + '" target="_blank" rel="noopener">查看详情 →</a>' : "");
+  }
+
+  function showList() {
+    document.getElementById("detail").classList.add("hidden");
+    document.getElementById("list").classList.remove("hidden");
+    document.getElementById("sideTitle").textContent = "点位列表";
+    document.getElementById("backBtn").style.display = "none";
+    renderList();
+  }
+
+  var markerById = {};
+  var geocoder = null;
+  var map = null;
+
+  function ensureMap() {
+    if (map) return map;
+    var amapCfg = CONFIG.amap || {};
+    var mapCfg = CONFIG.map || {};
+    map = new AMap.Map("map", {
+      resizeEnable: true,
+      zoom: mapCfg.defaultZoom || 4,
+      center: mapCfg.defaultCenter || [105, 35.5],
+      mapStyle: amapCfg.mapStyle || "amap://styles/fresh"
+    });
+    window.__amapMap = map;
+    return map;
+  }
+
+  function ensureGeocoder(callback) {
+    if (geocoder) {
+      if (callback) callback(geocoder);
+      return;
+    }
+    if (!window.AMap || !window.AMap.Geocoder) {
+      if (callback) callback(null);
+      return;
+    }
+    AMap.plugin("AMap.Geocoder", function () {
+      geocoder = new AMap.Geocoder({
+        city: "全国",
+        radius: 1000
+      });
+      if (callback) callback(geocoder);
+    });
+  }
+
+  function geocodeAddress(address, callback) {
+    var safeAddress = String(address || "").trim();
+    if (!safeAddress) {
+      if (callback) callback(null);
+      return;
+    }
+
+    ensureGeocoder(function (svc) {
+      if (svc) {
+        svc.getLocation(safeAddress, function (status, result) {
+          if (status === "complete" && result && result.geocodes && result.geocodes.length) {
+            var location = result.geocodes[0].location;
+            if (callback) callback({ lng: Number(location.lng), lat: Number(location.lat) });
+            return;
+          }
+          fallbackNominatim(safeAddress, callback);
+        });
+        return;
+      }
+      fallbackNominatim(safeAddress, callback);
+    });
+  }
+
+  function fallbackNominatim(address, callback) {
+    var q = encodeURIComponent(address);
+    var url = "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=" + q;
+    fetch(url, {
+      headers: { accept: "application/json" }
+    }).then(function (response) {
+      if (!response.ok) {
+        if (callback) callback(null);
+        return;
+      }
+      return response.json();
+    }).then(function (data) {
+      if (!data || !data.length) {
+        if (callback) callback(null);
+        return;
+      }
+      var item = data[0];
+      if (callback) callback({ lng: Number(item.lon), lat: Number(item.lat) });
+    }).catch(function () {
+      if (callback) callback(null);
+    });
+  }
+
+  function validLatLng(p) {
+    return p && p.lng != null && p.lat != null && Math.abs(p.lat) <= 90 && Math.abs(p.lng) <= 180;
+  }
+
+  function renderMarkers() {
+    var mapRef = ensureMap();
+    mapRef.clearMap();
+    markerById = {};
+    var list = filteredPoints();
+    var bounds = new AMap.Bounds();
+    list.forEach(function (p) {
+      if (!validLatLng(p)) {
+        geocodeAddress(p.address, function (geo) {
+          if (geo) {
+            p.lng = geo.lng;
+            p.lat = geo.lat;
+            renderMarkers();
+          }
+        });
+        return;
+      }
+
+      var lngLat = [p.lng, p.lat];
+      var marker = new AMap.Marker({
+        position: lngLat,
+        title: p.title,
+        content: '<div style="width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.95);background:' + colorOf(p) + ';box-shadow:0 1px 2px rgba(0,0,0,.18);"></div>',
+        offset: new AMap.Pixel(-8, -8),
+        clickable: true
+      });
+      marker.on("click", function () { selectPoint(p.id, false); });
+      marker.setMap(mapRef);
+      markerById[p.id] = marker;
+      bounds.extend(lngLat);
+    });
+
+    if (list.length) {
+      var fitBounds = new AMap.Bounds();
+      list.forEach(function (p) {
+        if (validLatLng(p)) fitBounds.extend([p.lng, p.lat]);
+      });
+      if (fitBounds.northeast && fitBounds.southwest) {
+        mapRef.setFitView();
+      }
+    }
+    window.__amapMarkers = markerById;
+  }
+
+  function selectPoint(id, fromList) {
+    var p = null;
+    for (var i = 0; i < points.length; i++) if (points[i].id === id) { p = points[i]; break; }
+    if (!p) return;
+    state.selectedId = id;
+    if (fromList) renderList();
+    renderDetail(p);
+
+    var marker = markerById[id];
+    if (marker) {
+      map.setZoom(Math.max(map.getZoom(), 6));
+      map.panTo([p.lng, p.lat]);
+      marker.setTop(true);
+      mapRefHighlight();
+      marker.setContent('<div style="width:18px;height:18px;border-radius:50%;border:3px solid rgba(34,38,43,.9);background:' + colorOf(p) + ';box-shadow:0 2px 10px rgba(0,0,0,.18);"></div>');
+      marker.setOffset(new AMap.Pixel(-9, -9));
+    }
+  }
+
+  function mapRefHighlight() {
+    Object.keys(markerById).forEach(function (key) {
+      var m = markerById[key];
+      if (!m) return;
+      var point = points.find(function (item) { return String(item.id) === String(key); });
+      m.setContent('<div style="width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.95);background:' + colorOf(point || {category: ""}) + ';box-shadow:0 1px 2px rgba(0,0,0,.18);"></div>');
+      m.setOffset(new AMap.Pixel(-8, -8));
+    });
+  }
+
+  document.getElementById("chips").addEventListener("click", function (e) {
+    var chip = e.target.closest(".chip");
+    if (!chip) return;
+    state.categoryId = chip.getAttribute("data-id");
+    state.selectedId = null;
+    renderChips();
+    showList();
+    renderMarkers();
+  });
+
+  document.getElementById("search").addEventListener("input", function (e) {
+    state.keyword = e.target.value;
+    state.selectedId = null;
+    showList();
+    renderMarkers();
+  });
+
+  document.getElementById("list").addEventListener("click", function (e) {
+    var item = e.target.closest(".list-item");
+    if (!item) return;
+    selectPoint(item.getAttribute("data-id"), true);
+  });
+
+  document.getElementById("backBtn").addEventListener("click", function () {
+    state.selectedId = null;
+    mapRefHighlight();
+    showList();
+  });
+
+  document.getElementById("layerToggle").addEventListener("click", function (e) {
+    var btn = e.target.closest("button");
+    if (!btn) return;
+    var layer = btn.getAttribute("data-layer");
+    var mapStyle = layer === "std" ? "amap://styles/normal" : (CONFIG.amap.mapStyle || "amap://styles/fresh");
+    map.setMapStyle(mapStyle);
+    document.querySelectorAll("#layerToggle button").forEach(function (b) { b.classList.remove("on"); });
+    btn.classList.add("on");
+  });
+
+  function init() {
+    document.getElementById("statPoints").textContent = meta.totalPoints;
+    document.getElementById("statSchools").textContent = meta.totalSchools;
+    renderChips();
+    renderLegend();
+    renderList();
+    ensureMap();
+    renderMarkers();
+  }
+
+  var state = { categoryId: "", keyword: "", selectedId: null };
+
+  var amapScript = document.createElement("script");
+  var amapConfig = CONFIG.amap || {};
+  var amapParams = ["v=2.0", "key=" + encodeURIComponent(amapConfig.key || "")];
+  if (amapConfig.securityJsCode) {
+    amapParams.push("securityJsCode=" + encodeURIComponent(amapConfig.securityJsCode));
+  }
+  amapParams.push("plugin=AMap.Geocoder");
+  amapScript.src = "https://webapi.amap.com/maps?" + amapParams.join("&");
+  amapScript.async = true;
+  amapScript.onload = function () {
+    init();
+  };
+  amapScript.onerror = function () {
+    document.getElementById("map").innerHTML = '<div style="padding:20px;line-height:1.6;color:#a00;">高德地图加载失败，请检查配置文件中的 key 和 securityJsCode 是否正确。</div>';
+  };
+  document.head.appendChild(amapScript);
+})();
+</script>
+</body>
+</html>

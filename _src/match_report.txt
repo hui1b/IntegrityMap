@@ -1,0 +1,26 @@
+NEW: 241 OLD: 238
+matched: 234 unmatched: 7
+   contains_same_school 54
+   exact_title 4
+   exact_title_school 155
+   fuzzy_same_school 1
+   norm_title 20
+
+=== UNMATCHED NEW (no counterpart found) ===
+82 | 江苏师范大学 | 家文化研究基地 | 教育基地
+     best global fuzzy 0.67: 盐城农业科技职业学院 | 荷（廉）文化研学基地
+83 | 无锡城市职业技术学院 | 《追光》（话剧） | 艺术作品
+     best global fuzzy 0.50: 重庆大学 | 《何鲁》（话剧）
+84 | 江苏电子信息职业学院 | 海棠园 | 教育基地
+     best global fuzzy 0.40: 武汉科技大学 | 廉园
+85 | 盐城工业职业技术学院 | 廉洁文化岛 | 教育基地
+     best global fuzzy 0.73: 海南师范大学 | “海瑞廉洁文化”
+87 | 浙江工业大学 | 于谦清廉史迹与思想 | 学科课程
+     best global fuzzy 0.31: 山西大学 | 清廉书屋
+190 | 重庆邮电大学 | 长波楼与重庆邮电大学档案馆 | 纪念场馆
+     best global fuzzy 0.67: 重庆邮电大学 | 重庆邮电大学的长波楼与档案馆
+225 | 丽江师范学院 | 《桂梅赞》（歌剧） | 艺术作品
+     best global fuzzy 0.50: 丽江师范学院 | 民族歌剧《桂梅赞》
+
+=== MATCHED but summary/link missing in old? ===
+count missing in old: 0

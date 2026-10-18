@@ -1,0 +1,27 @@
+slug map: {'jncg': '纪念场馆', 'jyjd': '教育基地', 'yszp': '艺术作品', 'whpp': '文化品牌', 'xkkc': '学科课程'}
+
+UNKNOWN SLUG: 8 自然科学院旧址校史专题展馆 | link https://www.sizhengwang.cn/a/ljwhdt_lsyj/251121/2272262.shtml
+UNKNOWN SLUG: 19 莲池书院 | link https://www.sizhengwang.cn/a/ljwhdt_lsyj/251121/2272279.shtml
+MISMATCH 52 | new: 纪念场馆 | old: 文化品牌
+    NEW 上海电机学院 | “三线精神”传承馆
+    OLD 上海电机学院 | “三线精神”传承馆 | https://www.sizhengwang.cn/a/whpp/251121/2272373.shtml
+UNKNOWN SLUG: 97 国立安徽大学红楼 | link https://www.sizhengwang.cn/a/ljwhdt_lsyj/251121/2272313.shtml
+MISMATCH 105 | new: 纪念场馆 | old: 文化品牌
+    NEW 福建江夏学院 | 冯梦龙展馆
+    OLD 福建江夏学院 | 冯梦龙展馆 | https://www.sizhengwang.cn/a/whpp/251121/2272419.shtml
+UNKNOWN SLUG: 135 应天书院 | link https://www.sizhengwang.cn/a/ljwhdt_lsyj/251124/2274534.shtml
+UNKNOWN SLUG: 140 华中农业大学主楼董必武题字 | link https://www.sizhengwang.cn/a/ljwhdt_lsyj/251124/2274734.shtml
+UNKNOWN SLUG: 154 潕溪书院 | link https://www.sizhengwang.cn/a/ljwhdt_lsyj/251124/2274817.shtml
+UNKNOWN SLUG: 157 湖南省立第一师范学校旧址 | link https://www.sizhengwang.cn/a/ljwhdt_lsyj/251124/2274834.shtml
+UNKNOWN SLUG: 180 独秀峰廉洁教育基地 | link https://www.sizhengwang.cn/a/ljwhdt_lsyj/251124/2274719.shtml
+UNKNOWN SLUG: 182 清风藏器——贺州民族文化博物馆廉洁文物集萃 | link https://www.sizhengwang.cn/a/ljwhdt_lsyj/251124/2274722.shtml
+MISMATCH 191 | new: 艺术作品 | old: 文化品牌
+    NEW 重庆邮电大学 | 《红色长波》（话剧）
+    OLD 重庆邮电大学 | 《红色长波》 （话剧） | https://www.sizhengwang.cn/a/whpp/251124/2274751.shtml
+UNKNOWN SLUG: 215 西南联大旧址及博物馆 | link https://www.sizhengwang.cn/a/ljwhdt_lsyj/251124/2275026.shtml
+MISMATCH 218 | new: 学科课程 | old: 文化品牌
+    NEW 昆明理工大学 | 大学生廉洁自律教育
+    OLD 昆明理工大学 | 《大学生廉洁自律教育》课程 | https://www.sizhengwang.cn/a/whpp/251124/2275011.shtml
+UNKNOWN SLUG: 228 西北农林科技大学3号楼 | link https://www.sizhengwang.cn/a/ljwhdt_lsyj/251124/2275047.shtml
+
+category mismatches: 4 | unknown slugs: 11

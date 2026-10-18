@@ -1,0 +1,347 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+<!-- css -->
+<link rel="shortcut icon" type="image/ico" href="/images/favicon.ico" />
+<link rel="stylesheet" href="/v3/css/v3-framework.css">
+<link rel="stylesheet" href="/v3/css/responsiveslides.css" />
+<link rel="stylesheet" href="/v3/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="/v3/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/layout.css">
+<link rel="stylesheet" href="/css/index.css?v=1.0">
+<link rel="stylesheet" href="/v3/css/v3-site.css?v=1.0423">
+<link rel="stylesheet" href="/css/swiper-3.4.2.min.css">
+
+<!-- js -->
+<script>
+	var frontAppContext = 'https://www.sizhengwang.cn/zcms/';
+	var siteID = "144";
+	var siteURL = "https://www.sizhengwang.cn/";
+ 	var siteAlias= "";
+	var isPreview = false;
+  	var url = window.location.href;
+  	if(url.indexOf(frontAppContext) === 0){
+	    var path=url.substring(frontAppContext.length);
+	    if(path.indexOf('/preview/')===0||path.indexOf('preview/')===0){
+	      isPreview=true;
+	      siteURL = "https://www.sizhengwang.cn/zcms/preview/szw/";
+		}
+	}
+</script>
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/jquery.pseudo.js"></script>
+  <script src="/js/ofi.min.js"></script>
+<script src="/js/zcms_common.min.js" contextpath="https://www.sizhengwang.cn/zcms/"></script>
+<script src="/js/zcms_frontend.js" contextpath="https://www.sizhengwang.cn/zcms/"></script>
+<script src="/v3/js/responsiveslides.js"></script>
+<script src="/v3/js/hammer.min.js"></script>
+<script src="/v3/js/bootstrap.min.js"></script>
+<script src="/js/index.js"></script>
+<script src="/js/qrcode.js"></script>
+<script src="/js/kkpager.min.js"></script>
+<script src="/js/slick.min.js"></script>
+<script src="/v3/js/v3_site.js"></script>
+<script src="/js/swiper-3.4.2.jquery.min.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<!--[if lt IE 10]><script src="${prefix("js/respond.src.js")}"></script><![endif]-->
+
+    <title>廉洁文化地图 - 全国高校思想政治工作网</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/css/swiper-3.4.2.min.css" />
+    <script type="text/javascript" src="https://api.tianditu.gov.cn/api?v=4.0&tk=660ef38b15439a82916f4d6f29a6258b"></script>
+  </head>
+  <body>
+    <div class="mapbg mapIndex">
+      
+
+<link rel="stylesheet" href="/v3/css/ljwhdt.css" />
+
+<div class="tophead">
+  <div class="mapwrap">
+    <a href="https://www.sizhengwang.cn/" target="_blank">
+      <img class="title indexshow szdtshow hide" src="/images/ljwhdt/title.png" />
+    </a>
+  </div>
+  <div class="mapwrap timewrap timewrap2 hidden">
+    <span class="tipfont font18 indexshow">年份</span>
+    <div class="selectbox indexshow">
+      <div class="selectTitle clearfix">
+        <span class="font ellipsis noselect selectShow selectShowIndex fl">全部</span>
+        <span class="icon easeShow"></span>
+      </div>
+      <div class="selectUl YearSelectUl"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function initYear() {
+    var curYear = new Date().getFullYear()
+    var yHtml = '<div class="selectli on" attr="" onClick="selectLi(this)">全部</div>'
+    for (var i = 0; i < curYear - 2024; i++) {
+      var num = Number(curYear) - i
+      yHtml += '<div class="selectli" attr="' + num + '" onClick="selectLi(this)">' + num + "</div>"
+    }
+    $(".YearSelectUl").html(yHtml)
+  }
+
+  function selectLi(e) {
+    var txt = $(e).text()
+    var status = $(e).attr("attr")
+    $(e).addClass("on").siblings().removeClass("on")
+    $(e).parents(".selectbox").find(".selectShow").html(txt).attr("status", status)
+    getMapIndex()
+  }
+
+  $(".selectbox").click(function (e) {
+    e.stopPropagation()
+    $(this).toggleClass("on")
+  })
+  $(document).click(function (e) {
+    e.stopPropagation()
+    if ($(".selectbox").hasClass("on")) {
+      $(".selectbox").removeClass("on")
+    }
+  })
+
+  $(function () {
+    initYear()
+  })
+</script>
+
+
+      <div class="mapwrap">
+        <div class="indexNum">
+          <div class="numwrapbox">
+            <div class="numwrap">
+              <div class="box">
+                <span class="num font32 contentTotal">-</span>
+                <div class="font16 font">入选全国高校廉洁文化点位</div>
+              </div>
+              <div class="box">
+                <span class="num font32 schoolTotal">-</span>
+                <div class="font16 font">入选高校</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mainbox">
+          <div class="centerbox d-shrink">
+            <div class="jdmapwrap">
+              <div class="contentbox">
+                <div class="dtContent">
+                  <div class="schoolBox">
+                    <div class="schoolInfo">
+                      <div class="name font20 ellipsis" id="schoolName"></div>
+                      <div class="info font14 ellipsis" id="schoolInfo"></div>
+                    </div>
+                    <div class="conList" id="schoolCon"></div>
+                  </div>
+                </div>
+                <div class="sboxWrap">
+                  <div class="sbox1">
+                    <input type="text" class="font16" id="searchIpt1" placeholder="搜索高校名称" />
+                    <i class="iconbtn iconbtn1 noselect pointer" onclick="searchMap()"></i>
+                    <i class="iconbtn iconbtn2 noselect pointer" onclick="clearVal1()"></i>
+                  </div>
+                </div>
+                <div class="changeSize hidden">
+                  <span class="on" zoom="4">全国</span>
+                  <span zoom="6">省市</span>
+                  <span zoom="9">区县</span>
+                  <span zoom="11">乡镇</span>
+                  <span zoom="15">街道</span>
+                </div>
+                <div id="conTem">
+                  <template>
+                    <div class="item">
+                      <div class="font16 title">
+                        <a class="ellipsis" href="{data.link}" title="{data.title}" target="_blank">{data.title}</a>
+                      </div>
+                      <div class="summary font14 line3">{data.summary}</div>
+                      <div class="morebtn">
+                        <a class="font14" href="{data.link}" target="_blank">查看详情</a>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+                <div id="mapDiv" class="mapbox"></div>
+              </div>
+              <div class="legendwrap">
+                <div class="legendbox legendSwiper font16">
+                  <div class="swiper-wrapper">
+                    
+                      <div class="item item0 swiper-slide on allItem" data-id="110864" attr="0">
+                        <div class="slidebox">
+                          <div class="font18 font ellipsis">全部</div>
+                          
+                            <div class="font16 num">238</div>
+                          
+                        </div>
+                      </div>
+                      
+                        
+                          <div class="item item1 swiper-slide" data-id="110865" data-level="2" attr="1">
+                            <div class="slidebox">
+                              <div class="font18 font ellipsis">历史遗迹</div>
+                              
+                                <div class="font16 num">11</div>
+                              
+                            </div>
+                          </div>
+                          <div class="item item2 swiper-slide" data-id="110866" data-level="2" attr="2">
+                            <div class="slidebox">
+                              <div class="font18 font ellipsis">纪念场馆</div>
+                              
+                                <div class="font16 num">34</div>
+                              
+                            </div>
+                          </div>
+                          <div class="item item3 swiper-slide" data-id="110867" data-level="2" attr="3">
+                            <div class="slidebox">
+                              <div class="font18 font ellipsis">教育基地</div>
+                              
+                                <div class="font16 num">123</div>
+                              
+                            </div>
+                          </div>
+                          <div class="item item4 swiper-slide" data-id="110868" data-level="2" attr="4">
+                            <div class="slidebox">
+                              <div class="font18 font ellipsis">艺术作品</div>
+                              
+                                <div class="font16 num">25</div>
+                              
+                            </div>
+                          </div>
+                          <div class="item item5 swiper-slide" data-id="110869" data-level="2" attr="5">
+                            <div class="slidebox">
+                              <div class="font18 font ellipsis">文化品牌</div>
+                              
+                                <div class="font16 num">29</div>
+                              
+                            </div>
+                          </div>
+                          <div class="item item6 swiper-slide" data-id="110870" data-level="2" attr="6">
+                            <div class="slidebox">
+                              <div class="font18 font ellipsis">学科课程</div>
+                              
+                                <div class="font16 num">16</div>
+                              
+                            </div>
+                          </div>
+                      
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebox d-grow">
+            <div class="catTitle">
+              <img src="/images/ljwhdt/icon12.png"/>
+            </div>
+            <div class="jdtable jdtable2 font16">
+              <div class="thead">
+                <div class="li1">序号</div>
+                <div class="li2">点位名称</div>
+                <div class="li3">所在高校</div>
+              </div>
+              <div class="swiper-container tabSwiper" style="height: 670px">
+                <div class="tbody swiper-wrapper"></div>
+              </div>
+              <div id="trTem">
+                <template>
+                  <div class="item swiper-slide">
+                    <div class="li1">{data.num}</div>
+                    <div class="li2 ellipsis" title="{data.title}">
+                      <a href="{data.link}" class="name" target="_blank">{data.title}</a>
+                    </div>
+                    <div class="li3 ellipsis" title="{data.schoolName}">{data.schoolName}</div>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="/js/swiper-3.4.2.jquery.min.js"></script>
+    <script src="/v3/js/ljwhdt.js"></script>
+    <script>
+      $(".indexshow").removeClass("hide")
+
+      var legendSwiper = new Swiper(".legendSwiper", {
+        slideToClickedSlide: true,
+        // autoplay: 5000,
+        // loop: true,
+        slidesPerView: 7,
+        spaceBetween: 5,
+        // loopedSlides: 10,
+        breakpoints: {
+          1500: {
+            slidesPerView: 4.8,
+            centeredSlides: false
+          },
+          1200: {
+            slidesPerView: 5.8,
+            centeredSlides: false
+          },
+          992: {
+            slidesPerView: 4.8,
+            centeredSlides: false
+          },
+          540: {
+            slidesPerView: 2.2,
+            centeredSlides: false
+          }
+        },
+        on: {
+          slideChangeTransitionEnd: function () {
+            // initContent()
+          }
+        }
+      })
+    </script>
+  
+<script src="https://www.sizhengwang.cn/zcms/stat/front/stat.js" type="text/javascript"></script>
+<script>
+if(window._zcms_stat)_zcms_stat("SiteID=144&CatalogInnerCode=002895&Type=null&Dest=https://www.sizhengwang.cn/zcms/front/stat/dealer");
+</script>
+<!-- Google tag (gtag.js)  begin-->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GRFW5J3BFC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-GRFW5J3BFC');
+</script>   
+<!-- Google tag (gtag.js)  end-->
+
+<!-- Baidu Tongji  begin-->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?dd05cd4fe832c60dd8b22de855a9ce2f";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<!-- Baidu Tongji  end-->
+
+
+<!-- App=ZCMS(ZCMS内容管理系统) 3.2.13,CostTime=210,PublishDate=2026-06-29 09:23:51 -->
+</body>
+</html>

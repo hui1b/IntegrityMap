@@ -1,0 +1,38 @@
+=== map_index map.data: count = 238
+map point fields: ['ID', 'schoolName', 'shortTitle', 'subTitle', 'title', 'upTitle']
+sample point: {"ID": 2272262, "title": "自然科学院旧址校史专题展馆", "schoolName": "北京理工大学", "shortTitle": "108.778463645", "upTitle": "36.47486721", "subTitle": "陕西省延安市自然科学院旧址窑洞"}
+
+=== provinceMap type: dict
+provinceMap keys: ['data']
+provinceMap.data type: dict len: 32
+province keys sample: ['', '110000', '120000', '130000', '140000']
+sample province val: {"total": 1}
+
+=== rank data keys: ['total', 'data']
+rank total: 238
+rank list count: 238
+rank row fields: ['ID', 'address', 'link', 'schoolCode', 'schoolName', 'summary', 'title']
+sample rank row: {"ID": 2275119, "title": "新疆石河子职业技术学院爱国主义教育基地", "link": "https://www.sizhengwang.cn/a/jyjd/251124/2275119.shtml", "schoolName": "新疆石河子职业技术学院", "address": "新疆维吾尔自治区石河子市东四路1号", "summary": "爱国主义教育基地是加强党风廉政建设的教育平台，通过展示习近平总书记关于全面从严治党的重要论述和党史中的廉政故事，引导党员干部坚定理想信念。基地核心展区以“廉政楷模”为主题，展现周恩来、孔繁森等优秀共产党员的廉洁风范，并引用习近平总书记“大贤秉高鉴，公烛无私光”的评价，彰显共产党人的政治本色。同时融合传统廉政文化精髓，促进古今廉政思想交融，作为党性教育重要阵地，基地通过创新教育形式，为推进全面从严治党提供有力支撑。", "schoolCode": null}
+
+map titles: 238 rank titles: 238
+titles in both: 238
+map-only titles: 0
+rank-only titles: 0
+ID overlap: 238
+schoolName overlap: 203 map schools: 203 rank schools: 203
+title+school in both: 238
+map title+school count: 238 rank title+school count: 238
+
+=== category files ===
+110865 历史遗迹: 11 points, fields=['ID', 'schoolName', 'shortTitle', 'subTitle', 'title', 'upTitle']
+   sample: {"ID": 2272262, "title": "自然科学院旧址校史专题展馆", "schoolName": "北京理工大学", "shortTitle": "108.778463645", "upTitle": "36.47486721", "subTitle": "陕西省延安市自然科学院旧址窑洞"}
+110866 纪念场馆: 34 points, fields=['ID', 'schoolName', 'shortTitle', 'subTitle', 'title', 'upTitle']
+   sample: {"ID": 2272256, "title": "科学家精神特色馆藏室", "schoolName": "中国石油大学（北京）", "shortTitle": "116.240894274", "upTitle": "40.2191463738", "subTitle": "北京市昌平区府学路18号"}
+110867 教育基地: 123 points, fields=['ID', 'schoolName', 'shortTitle', 'subTitle', 'title', 'upTitle']
+   sample: {"ID": 2272144, "title": "北京大学立德树人教育基地", "schoolName": "北京大学", "shortTitle": "116.298357684", "upTitle": "39.9934779343", "subTitle": "北京市海淀区颐和园路 5 号"}
+110868 艺术作品: 25 points, fields=['ID', 'schoolName', 'shortTitle', 'subTitle', 'title', 'upTitle']
+   sample: {"ID": 2272250, "title": "《钱鸣高：煤海深耕 清风砺行》（专题片）", "schoolName": "中国矿业大学（北京）", "shortTitle": "116.347080652", "upTitle": "39.9872083555", "subTitle": "北京市海淀区学院路丁 11 号"}
+110869 文化品牌: 29 points, fields=['ID', 'schoolName', 'shortTitle', 'subTitle', 'title', 'upTitle']
+   sample: {"ID": 2272294, "title": "青年清廉——以校园“清”廉小创意讲好河东文化大故事", "schoolName": "运城学院", "shortTitle": "110.9306706", "upTitle": "35.12707668", "subTitle": "山西省运城市盐湖区复旦西街 1155 号"}
+110870 学科课程: 16 points, fields=['ID', 'schoolName', 'shortTitle', 'subTitle', 'title', 'upTitle']
+   sample: {"ID": 2272274, "title": "《以茶喻廉》课程", "schoolName": "北京财贸职业学院", "shortTitle": "116.6345766", "upTitle": "39.92912914", "subTitle": "北京市通州区北关大街 88 号"}
